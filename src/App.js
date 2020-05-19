@@ -1,33 +1,21 @@
 import React from 'react';
-import Container from '@material-ui/core/Container';
-import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
-import Link from '@material-ui/core/Link';
-import ProTip from './ProTip';
+import ItemList from "./ItemList";
+import About from "./About";
 
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import Layout from "./Layout";
+import { BrowserRouter, Route } from "react-router-dom";
+import Success from "./Success";
+import Cancel from "./Cancel";
 
 export default function App() {
   return (
-    <Container maxWidth="sm">
-      <Box my={4}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Create React App v4-beta example
-        </Typography>
-        <ProTip />
-        <Copyright />
-      </Box>
-    </Container>
+    <BrowserRouter>
+      <Layout>
+        <Route path="/" exact component={ItemList} />
+        <Route path="/about" component={About} />
+        <Route path="/success" component={Success} />
+        <Route path="/cancel" component={Cancel} />
+      </Layout>
+    </BrowserRouter>
   );
 }
