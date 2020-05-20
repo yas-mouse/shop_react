@@ -131,7 +131,7 @@ const ItemList = () => {
         {/* End hero unit */}
         <Grid container spacing={4}>
           {products.data.map((item) => (
-            <Grid item key={item.id} xs={6} sm={6} md={4}>
+            <Grid item key={item.id} xs={6} sm={4} md={4}>
               <Card className={classes.card}>
                 <CardMedia
                   className={classes.cardMedia}

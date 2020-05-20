@@ -69,6 +69,7 @@ const Layout = ({ children }) => {
             <MenuItem
               onClick={() => {
                 history.push("/");
+                handleClose();
               }}
             >
               商品一覧
@@ -76,6 +77,7 @@ const Layout = ({ children }) => {
             <MenuItem
               onClick={() => {
                 history.push("/about");
+                handleClose();
               }}
             >
               About
