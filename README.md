@@ -1,25 +1,23 @@
-# Create React App example
+#  Reactでstripe checkoutを実装したサンプル
 
 ## How to use
 
-Download the example [or clone the repo](https://github.com/mui-org/material-ui):
+yarn インストール:
 
 ```sh
-curl https://codeload.github.com/mui-org/material-ui/tar.gz/master | tar -xz --strip=2 material-ui-master/examples/create-react-app
-cd create-react-app
+yarn install
 ```
 
-Install it and run:
+.envにstripeのキーを設定
 
 ```sh
-npm install
-npm start
+cp .env.sample .env.development.local
+cp .env.sample .env.test.local
+cp .env.sample .env.production.local
 ```
 
-or:
+実行
 
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/mui-org/material-ui/tree/master/examples/create-react-app)
-
-## The idea behind the example
-
-This example demonstrates how you can use [Create React App](https://github.com/facebookincubator/create-react-app).
+```sh
+yarn start
+```
