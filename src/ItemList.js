@@ -43,12 +43,15 @@ const ItemList = () => {
 
   const buyClick = async (event) => {
     const priceId = event.currentTarget.dataset.priceId;
+    const DOMAIN = window.location.href.replace(/[^/]*$/, "");
 
     try {
       const resSession = await axios.post(
         `${process.env.REACT_APP_STRIPE_SERVER_API}/createCheckoutSession`,
         {
           priceId: priceId,
+          successUrl: `${DOMAIN}success`,
+          cancelUrl: `${DOMAIN}cancel`,
         }
       );
 
