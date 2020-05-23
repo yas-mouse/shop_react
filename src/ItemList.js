@@ -40,69 +40,41 @@ const ItemList = () => {
   const classes = useStyles();
   const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
   const [products, setProducts] = useState({ data: [] });
-  const [prices, setPrices] = useState({ data: [] });
 
   const buyClick = async (event) => {
-    const productId = event.currentTarget.dataset.productId;
-    const price = prices.data.find((price) => price.product === productId);
-    if (price == null) {
-      return;
-    }
+    const priceId = event.currentTarget.dataset.priceId;
 
-    // When the customer clicks on the button, redirect them to Checkout.
-    const DOMAIN = window.location.href.replace(/[^/]*$/, "");
-    const stripe = await stripePromise;
-    const { error } = await stripe.redirectToCheckout({
-      lineItems: [
-        // Replace with the ID of your price
-        { price: price.id, quantity: 1 },
-      ],
-      mode: "payment",
-      successUrl: `${DOMAIN}success`,
-      cancelUrl: `${DOMAIN}cancel`,
-      shippingAddressCollection: {
-        allowedCountries: ["JP"],
-      },
-    });
-    console.log(error.message);
-    // If `redirectToCheckout` fails due to a browser or network
-    // error, display the localized error message to your customer
-    // using `error.message`.
+    try {
+      const resSession = await axios.post(
+        `${process.env.REACT_APP_STRIPE_SERVER_API}/createCheckoutSession`,
+        {
+          priceId: priceId,
+        }
+      );
+
+      const sessionId = resSession.data.body.id;
+      const stripe = await stripePromise;
+      await stripe.redirectToCheckout({
+        sessionId: sessionId,
+      });
+
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
-    const username = process.env.REACT_APP_STRIPE_SERCRET_KEY;
     async function fetchData() {
       try {
-        const resProducts = await axios.get(
-          "https://api.stripe.com/v1/products",
-          {
-            headers: {
-              Authorization: `Bearer ${username}`,
-            },
-          }
-        );
-        const resPrices = await axios.get("https://api.stripe.com/v1/prices", {
-          headers: {
-            Authorization: `Bearer ${username}`,
-          },
-        });
+        const resProducts = await axios.get(`${process.env.REACT_APP_STRIPE_SERVER_API}/products`);
         setProducts(resProducts.data);
-        setPrices(resPrices.data);
       } catch (error) {
+        setProducts({ data: [] });
         console.log(error);
       }
     }
     fetchData();
   }, []);
-
-  const getPrice = (id) => {
-    const price = prices.data.find((price) => price.product === id);
-    if (price == null) {
-      return;
-    }
-    return price.unit_amount;
-  };
 
   return (
     <div>
@@ -144,14 +116,14 @@ const ItemList = () => {
                   </Typography>
                   <Typography>{item.description}</Typography>
                   <Typography gutterBottom variant="h6" component="h2">
-                    ¥{getPrice(item.id)}
+                    ¥{item.price.unit_amount}
                   </Typography>
                 </CardContent>
                 <CardActions>
                   <Button
                     size="small"
                     color="primary"
-                    data-product-id={item.id}
+                    data-price-id={item.price.id}
                     onClick={buyClick}
                   >
                     今すぐ購入
